@@ -160,6 +160,7 @@ char find_operation(char first, int system[], char line[]) {
     return operation;
 }
 
+
 char * add(char *first_number, char *second_number, int system) {
     int n = len(first_number);
     int m = len(second_number);
