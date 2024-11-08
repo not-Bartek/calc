@@ -567,10 +567,11 @@ char * power(char *first_number, char *second_number, int system) {
     } 
     /*exp = 0*/
     if(compare(exponent, "0") == 0) {
+        printf("0000000000000");
         if(result != NULL) free(result);
-        result[0] = '1';
-        result[1] = '\0';
-        if(exponent != NULL) free(exponent);
+        result= create("1");
+        free(exponent);
+        free(mod);
         return result;
     }
     if(compare(exponent, "1") == 0) {
@@ -635,6 +636,7 @@ char * power(char *first_number, char *second_number, int system) {
     free(mod);
     return result;
 }
+
 
 char * arithmetics(char *first_number, char *second_number, char operation, int system[]) {
     char * result=NULL;
@@ -715,8 +717,6 @@ void calculate(char INPUT[40], char output[40]) {
         result = NULL;
         printf("freed result\n");
     }
-    if(first_number !=NULL) free(first_number);
-    if(second_number !=NULL) free(second_number);
     fclose(ptr_in);
     fclose(ptr_out);
 }
