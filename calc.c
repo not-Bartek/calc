@@ -41,6 +41,7 @@ void rem_0_rev(char *number) {
         if(i==0 && number[i] == '0') {
             /*If all numbers are 0, changes the number to one digit zero*/
             number[0] = '0';
+            number[1] = '\0';
             continue;
         } if(number[i] == '0') {
             number[i] = '\0';
@@ -138,7 +139,6 @@ int newline(char *result, int newline_streak, FILE *output) {
         file_print(result, 1, output);
         if(result != NULL) {
             free(result);
-            printf("freed result\n");
             result = NULL;
         }
     }
@@ -192,12 +192,12 @@ char * add(char *first_number, char *second_number, int system) {
     char *first_number2, *second_number2;
     int previous = 0;
     /*zwiekszanie rozmiaru first number 1 i 2 o 1 bajt*/
-    first_number2 = (char *)malloc(bigger_n + 1);
+    first_number2 = (char *)malloc(bigger_n + 2);
     if (first_number2 == NULL) { 
         printf("UNABLE TO ALLOCATE MEMORY");
         return NULL;
     }
-    second_number2 = (char *)malloc(bigger_n + 1);
+    second_number2 = (char *)malloc(bigger_n + 2);
     if (second_number2 == NULL) { 
         printf("UNABLE TO ALLOCATE MEMORY");
         free(first_number2);
@@ -218,8 +218,10 @@ char * add(char *first_number, char *second_number, int system) {
             second_number2[i] = '0';
         }
     }
+    second_number2[bigger_n + 1] = '\0';
+    first_number2[bigger_n + 1] = '\0';
     /*Dodawanie*/
-    for (i = 0; i < bigger_n + 1; i++) {
+    for (i = 0; i < bigger_n+1; i++) {
         int sum = (first_number2[i] - '0') + (second_number2[i] - '0') + previous;
         if (sum >= system) {
             first_number2[i] = (sum % system) + '0';
@@ -233,7 +235,6 @@ char * add(char *first_number, char *second_number, int system) {
     rem_0_rev(first_number2);
     /*Zwolnienie pamięci*/ 
     free(second_number2);
-    first_number2[len(first_number2)] = '\0';
     return first_number2;
 }
 
@@ -278,7 +279,7 @@ int mod_2(char *num, int system) {
 char * div_2(char *first, int system) {
     int n = len(first), i=0, j=0;
     int previous = 0;
-    char *wyn = calloc(n, sizeof(*wyn));
+    char *wyn = calloc(n+1, sizeof(*wyn));
 
     if(system == 2) {
         /*system dwojkowy dzielenie na 2 <=> przesuniecie bitowe w prawo*/
@@ -304,7 +305,6 @@ char * div_2(char *first, int system) {
                 }
                 previous = (first[n - 1 - i]-48) * system;
                 wyn[n - 1 - j] = 48;
-                /*printf("if spelniony first[i] =%c previous=%d\t wyn[j]=%c\n",first[n - 1 - i], previous, wyn[j]);*/
                 i++;
                 j++;
             } else {
@@ -315,9 +315,9 @@ char * div_2(char *first, int system) {
             }
         }
     }
+    wyn[n] = '\0';
     /*Usuniecie wiodacych zer*/
     rem_0_rev(wyn);
-    wyn[len(wyn)] = '\0';
     return wyn;
 }
 
@@ -387,55 +387,56 @@ char * mul(char *first_number, char* second_number, int system) {
     /*zwalnienie pamięci*/
     free(first_number2);
     free(second_number2);
-    result[len(result)] = '\0';
     return result;
 }
-
 char * division(char *first_number, char *second_number, int system) {
     int n = len(first_number);
     int m = len(second_number);
-    char *low, *high, *result, *multiplicated, *summed, *max_first, *x, *y=NULL;
+    char *low, *high, *result, *multiplicated, *summed, *high_minus, *check, *check_multiplicated;
     int new_n = n - m + 1;
-    int i = 0, j = 0;
-    printf("%d", j);
+    int i = 0;
+    /*Proste przypadki*/
     /*pierwsza mniejsza od drugiej*/
     if(compare(first_number, second_number) < 0) {
         result = create("0");
         return result;
     }
+    /*Second number equals zero*/
     if(compare(second_number, "0") == 0) {
         result = create_reversed("NIE DZIEL PRZEZ ZERO CHOLERO");
         return result;
     }
+    /*Second number equals one*/
     if(compare(second_number, "1") == 0) {
         result = create(first_number);
         return result;
     }
+    /*Second number equals two - simplier, faster function*/
     if(compare(second_number, "2") == 0) {
         result = div_2(first_number, system);
         return result;
     }
-    /*alokowanie result, high i low*/
-    result = (char *)malloc(new_n);
+    /*allocating result, high and low*/
+    result = (char *)malloc(new_n+1);
     if (result == NULL) { 
         printf("UNABLE TO ALLOCATE MEMORY");
         return NULL;
     }
-    high = (char *)malloc(new_n);
+    high = (char *)malloc(new_n+1);
     if (high == NULL) { 
         printf("UNABLE TO ALLOCATE MEMORY");
         free(result);
         return NULL;
     }
-    low = (char *)malloc(new_n);
+    low = (char *)malloc(new_n+1);
     if (low == NULL) { 
         printf("UNABLE TO ALLOCATE MEMORY");
         free(result);
         free(high);
         return NULL;
     }
-
-    /* inicjowanie result, high i low*/
+    /* initializing result, high and low*/
+    /*low - 100... } n-m digits*/
     if(new_n == 1) {
         low[0] = '1';
     } else {
@@ -447,88 +448,82 @@ char * division(char *first_number, char *second_number, int system) {
             }
         }
     }
+    /*high - 999999... } n-m+1 digits, where 9 := system - 1*/
     for (i = 0; i < new_n; i++) {
         if(i == 0) {
-            result[new_n-1 - i] = system/2 + 48;
             high[new_n-1 - i] = system - 1 + 48;
         } else if(i==1) {
-            result[new_n-1 - i] = '0';
             high[new_n-1 - i] = system - 1 + 48;
         }
         else {
-            result[new_n -1- i] = '0';
             high[new_n -1- i] = system - 1 + 48;
         }
     }
-    
-    printf("result: ");
-    print_number(result, 1);
-    printf("high: ");
-    print_number(high, 1);
-    printf("low: ");
-    print_number(low, 1);
+    /*Null signs after numbers*/
+    result[new_n] = '\0';
+    high[new_n] = '\0';
+    low[new_n] = '\0';
+    rem_0_rev(high);
+    rem_0_rev(low);
 
-    /*dzielenie (bin search)*/
+    /*Initial result := mean of high and low rounded down*/
+    summed = add(high, low, system);
+    result = div_2(summed, system);
+    free(summed);
+    /*multiplicated := result * second_number*/
     multiplicated = mul(result, second_number, system);
-    printf("multiplicated: ");
-    print_number(multiplicated, 1);
-    max_first = add(first_number, second_number, system);
-    printf("max_first: ");
-    print_number(max_first, 1);
-    j=0;
-    while(!(compare(multiplicated, first_number) >= 0 && compare(multiplicated, max_first) < 0))
-    {
-        if(j>= 40) break;
-        if(compare(multiplicated, first_number) > 0) {
-            high = result;
+    high_minus = sub1(high, system);
+    while(compare(low, high) < 0 && !(compare(result, high) == 0) && !(compare(result, low) == 0)) {
+        if(compare(multiplicated, first_number) >= 0) {
+            free(high);
+            high = create(result);
         } else {
-            low = result;
+            free(low);
+            low = create(result);
         }
         summed = add(high, low, system);
         result = div_2(summed, system);
-        printf("result: ");
-        print_number(result, 1);
-        printf("second_number: ");
-        print_number(second_number, 1);
-
         multiplicated = mul(result, second_number, system);
+
+        high_minus = sub1(high, system);
+        if(compare(low, high_minus) == 0) {
+            summed = add(high, low, system);
+            result = div_2(summed, system);
+            free(summed);
+            break;
+        }
         free(summed);
-        printf("multiplicated przed usunieciem zer: ");
-        print_number(multiplicated, 1);
         /*Usuniecie zer*/
         rem_0_rev(multiplicated);
         rem_0_rev(result);
-        j++;
     }
+    rem_0_rev(result);
     if(multiplicated != NULL) free(multiplicated);
-    /*sprawdzenie czy wynik jest za duzy*/
     multiplicated = mul(result, second_number, system);
-    if(compare(multiplicated, first_number) > 0) {
-        x = sub1(result, system);
-        multiplicated = mul(x, second_number, system);
-        if(compare(multiplicated, first_number) >= 0 && compare(multiplicated, max_first)){
-            y = sub1(x, system);
-            free(multiplicated);
-            multiplicated = mul(y, second_number, system);
-            if(compare(multiplicated, first_number) >= 0 && compare(multiplicated, max_first)) {
-                free(result);
-                free(x);
-                result = y;
-            }
-        } else {
-            if(y != NULL) free(y);
-            free(result);
-            result = x;
-        }
+    /*są rowne*/
+    if(compare(multiplicated, first_number) == 0) {
+        if(multiplicated != NULL) free(multiplicated);
+        if(high != NULL) free(high);
+        if(low != NULL) free(low);
+        return result;
+    }
+    /*check*/
+    check = add(result, "1", system);
+    rem_0_rev(check);
+    check_multiplicated = mul(check, second_number, system);
+    if(compare(check_multiplicated, first_number) <= 0) {
+        if(multiplicated != NULL) free(multiplicated);
+        if(high != NULL) free(high);
+        if(low != NULL) free(low);
+        if(check_multiplicated != NULL) free(check_multiplicated);
+        return check;
     }
     /*Usuniecie zer*/
     rem_0_rev(result);
     /*zwalnianie pamięci*/
     if(multiplicated != NULL) free(multiplicated);
-    if(max_first != NULL) free(max_first);
     if(high != NULL) free(high);
     if(low != NULL) free(low);
-    result[len(result)] = '\0';
     return result;
 }
 
@@ -608,7 +603,6 @@ char * power(char *first_number, char *second_number, int system) {
     }
     free(exponent);
     free(mod);
-    result[len(result)] = '\0';
     return result;
 }
 char *sub(char *first_number, char *second_number, int system) {
@@ -656,15 +650,12 @@ char *sub(char *first_number, char *second_number, int system) {
     /*odejmowanie*/
     for (i = 0; i < new_n; i++) {
         int sub = (first_number2[i] - '0') - (second_number2[i] - '0') + previous;
-        printf("sub=%d\n", sub);
         if (sub < 0) {
             first_number2[i] = (sub + system) + '0';
             previous = -1;
-            printf("first_number2[i]=%c\n", first_number2[i]);
         } else {
             first_number2[i] = sub + '0';
             previous = 0;
-            printf("first_number2[i]=%c\n", first_number2[i]);
         }
     }
     result = first_number2;
@@ -672,7 +663,6 @@ char *sub(char *first_number, char *second_number, int system) {
     rem_0_rev(result);
     /*zwalnianie pamięci*/
     free(second_number2);
-    result[len(result)] = '\0';
     return result;
 }
 char * modulo(char *first_number, char *second_number, int system) {
@@ -700,37 +690,34 @@ char * increment(char *iterator) {
             result[i] = '0';
         }
     }
-    printf("INCREMENT\n");
-    printf("iterator: ");
-    print_number(iterator, 1);
+    result[n+1] = '\0';
     for(i=0; i < n+1; i++) {
         if(result[i] + previous > '9') {
-            printf("iterator[i]=%c\n", result[i]);
             result[i] = '0';
             previous = 1;
         } else {
-            printf("iterator[i]=%c\n", result[i]);
             result[i] = result[i] + previous;
             previous = 0;
             break;
         }
     }
-    printf("iterator: ");
-    print_number(result, 1);
     free(iterator);
     return result;
 }
 char * sys_to_string(int system) {
-    char *result = (char *)malloc(2);
+    char *result = (char *)malloc(3);
     if(result == NULL) {
         printf("UNABLE TO ALLOCATE MEMORY");
         return NULL;
     }
     if(system < 10) {
         result[0] = system + 48;
+        result[1] = '\0';
+        result[2] = '\0';
     } else {
         result[0] = (system % 10) + 48;
         result[1] = (system / 10) + 48;
+        result[2] = '\0';
     }
     return result;
 }
@@ -747,7 +734,7 @@ char * to_decimal(char *first_number, int system) {
         result[i] = '0';
     }
     
-    iterator = malloc(n);
+    iterator = malloc(n+1);
     if(iterator == NULL) {
         printf("UNABLE TO ALLOCATE MEMORY");
         free(result);
@@ -756,20 +743,13 @@ char * to_decimal(char *first_number, int system) {
     for(i=0; i < n; i++) {
         iterator[i] = '0';
     }
+    iterator[n] = '\0';
     sys = sys_to_string(system);
-    printf("sys: ");
-    print_number(sys, 1);
     for(i=0; i < n; i++) {
+        rem_0_rev(iterator);
         /*potegowanie system ^ i*/
-        printf("i=%d\n", i);
-        printf("iterator: ");
-        print_number(iterator, 1);
-        
-        powered = power(sys, iterator, decimal);
-        printf("powered: ");
-        print_number(powered, 1);
-        /*x = mul(first[i], powered)*/
-        printf("first_number[i]=%c\n", first_number[i]);
+        rem_0_rev(iterator);
+        powered = power(sys, iterator, 10);
         string_current = (char *)malloc(3);
         if(string_current == NULL) {
             printf("UNABLE TO ALLOCATE MEMORY");
@@ -790,41 +770,22 @@ char * to_decimal(char *first_number, int system) {
         }
         
         /*zamienienie cyfry na liczbe dziesietna*/
-        printf("string_current: ");
-        print_number(string_current, 1);
         x = mul(string_current, powered, decimal);
-        printf("x: ");
-        print_number(x, 1);
-        /*y = add(result, x)*/
-        printf("result: ");
-        print_number(result, 1);
         y = add(result, x, decimal);
-        printf("y: ");
-        print_number(y, 1);
-        /*result = y*/
+        free(result);
         result = y;
         /*zwalnianie zmiennych*/
         free(powered);
-        printf("freed powered\n");
         free(x);
-        printf("freed x\n");
         free(string_current);
-        printf("freed current\n");
         /*iterator++*/
-        printf("result: ");
-        print_number(result, 1);
         iterator = increment(iterator);
-        printf("iterator: ");
-        print_number(iterator, 1);
     }
     /*Usuniecie zer*/
     rem_0_rev(result);
     /*zwalnianie pamięci*/
     free(iterator);
     free(sys);
-
-    printf("RESULT DECIMAL:");
-    print_number(result, 1);
     return result;
 }
 
@@ -842,25 +803,13 @@ char * from_decimal(char *first_number, int system) {
     first_number2 = create(first_number);
     i = 0;
     sys = sys_to_string(system);
-    printf("sys: ");
-    print_number(sys, 1);
     do {
-        printf("i=%d\n", i);
-        printf("first_number2: ");
-        print_number(first_number2, 1);
-        printf("sys: ");
-        print_number(sys, 1);
         x = modulo(first_number2, sys, decimal);
-        printf("x: ");
-        print_number(x, 1);
         if(len(x) > 1) {
             result[i] = ((x[1]-48) * 10) + x[0]-48 + 48;
         } else {
             result[i] = x[0];
         }
-        printf("result[i]=%c\n", result[i]);
-        printf("result: ");
-        print_number(result, 1);
         x = division(first_number2, sys,  decimal);
         free(first_number2);
         first_number2 = x;
@@ -884,20 +833,12 @@ char * arithmetics(char *first_number, char *second_number, char operation, int 
     else if(operation == '%') result = modulo(first_number, second_number, system[0]);
     else if(operation == '-') result = sub(first_number, second_number, system[0]);
     else if(operation == 'z') {
-        printf("zamiana");
-        result = to_decimal(first_number, system[0]);
-        x = first_number;
-        printf("x: ");
-        print_number(x, 1);
+        x = to_decimal(first_number, system[0]);
+        result = from_decimal(x, system[1]);
     }
-    else if(operation == 'D') {
-        result = div_2(first_number, system[0]);
-    }
-    else if(operation == 'M') {
-        result = div_2(first_number, system[0]);
-        printf("first number: ");
-        print_number(first_number, 1);
-        printf(mod_2(first_number, system[0]) == 1 ? "nieparzysta\n" : "parzysta\n");
+    else {
+        printf("WRONG OPERATION");
+        return NULL;
     }
     return result;
 }
@@ -921,10 +862,12 @@ void calculate(char INPUT[40], char output[40]) {
     /*glowna petla funkcji*/
     while(fgets(line, MAX_NUMBER, ptr_in)) {
         if(line[0] == '\n') {
-            newline_streak = newline(result, newline_streak, ptr_out);
-            ends = time(NULL);
-            delta = (double)ends - starts;
-            printf("czas operacji: %f\n", delta);
+            if(newline_streak == 0) {
+                ends = time(NULL);
+                delta = (double)ends - starts;
+                printf("czas operacji: %f\n", delta);
+            }
+            newline_streak = newline(result, newline_streak, ptr_out); 
         } else {
             /*linijka operacji - zapisanie operacji i systemu lub systemu i systemu docelowego*/
             if(newline_streak > 0) {
@@ -939,14 +882,11 @@ void calculate(char INPUT[40], char output[40]) {
             else if(newline_streak == 0 && number_streak == 0) {
                 first_number = create_reversed(line);
                 rem_0_rev(first_number);
-                printf("first_number reversed: ");
-                print_number(first_number, 1);
                 number_streak++;
                 fprintf(ptr_out, "%s", line);
                 if(operation == 'z') {
                     result = arithmetics(first_number, NULL, operation, systems);
                     free(first_number);
-                    printf("freed first_number\n");
                     number_streak++;
                 }
 
@@ -954,16 +894,12 @@ void calculate(char INPUT[40], char output[40]) {
             } else if(newline_streak == 0 && number_streak > 0) {
                 second_number = create_reversed(line);
                 rem_0_rev(second_number);
-                printf("second_number reversed: ");
-                print_number(second_number, 1);
                 fprintf(ptr_out, "%s", line);
                 result = arithmetics(first_number, second_number, operation, systems);
 
                 free(first_number);
-                printf("freed first_number\n");
                 free(second_number);
                 second_number = NULL;
-                printf("freed second_number\n");
                 first_number = result;
                 number_streak++;
             }
@@ -976,15 +912,14 @@ void calculate(char INPUT[40], char output[40]) {
         file_print(result, 1, ptr_out);
         ends = time(NULL);
         delta = (double)ends - starts;
-        printf("czas operacji: %f\n", delta);
+        printf("czas operacji: %f sekund\n", delta);
         result = NULL;
-        printf("freed result\n");
     }
     fclose(ptr_in);
     fclose(ptr_out);
 }
 
 int main(void) {
-    calculate("small_input.txt", "out.txt");
+    calculate("in.txt", "out.txt");
     return 0;
 }
