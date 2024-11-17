@@ -71,131 +71,131 @@ Description: Function that returns length of string (or number of digits)
 Arguments: 
 - char string[]: char array which length is unknown
 
-int max(int a, int b)
+###int max(int a, int b)
 Description: Function that returns bigger number
 Arguments: 
 - int a: first number
 - int b: second number
 
-int compare(char *first, char *second)
+###int compare(char *first, char *second)
 Description: Function that compares two numbers written as strings, bigger first: 1, second: -1, equal: 0
 Arguments: 
 - char *first: first string representing number
 - char *second: second string representing number
 
-void rem_0_rev(char *number)
+###void rem_0_rev(char *number)
 Description: Function which removes zeros from the beginning of the number
 Arguments: 
 - char *number: the string from which to remove zeros
 
-void file_print(char *number, int reversed, FILE *output)
+###void file_print(char *number, int reversed, FILE *output)
 Description: Function that prints number into file
 Arguments: 
 - char *number: string representing number
 - int reversed: a flag specifying whether the number should be printed from end to beginning
 - FILE *output: pointer to the file to which the number is to be printed
 
-char* create(char str_num[])
+###char* create(char str_num[])
 Description: Function which creates array of chars like given number and returns pointer to allocated space in memory
 Arguments: 
 - char str_num[]: string representing number
 
-char* create_reversed(char str_num[], int system)
+###char* create_reversed(char str_num[], int system)
 Description: Function which creates array of chars like given number but reversed and returns pointer to allocated space in memory
 Arguments: 
 - char str_num[]: string representing number
 - int system: system of the number
 
-char find_operation(char first, int system[], char line[])
+###char find_operation(char first, int system[], char line[])
 Description: Function for finding actual operation, activated when current line is operation line
 Arguments: 
 - char first: first sign of the line
 - int system[]: array with systems of the numbers
 - char line[]: string holding line of the file
 
-char * add(char *first_number, char *second_number, int system)
+###char * add(char *first_number, char *second_number, int system)
 Description: Function for finding the sum of two numbers returning pointer to the sum
 Arguments: 
 - char *first_number: string representing number
 - char *second_number: string representing number
 - int system: base of the numbers
 
-char * sub1(char *first, int system)
+###char * sub1(char *first, int system)
 Description: Subtracting one from any number
 Arguments: 
 - char *first: string representing number
 - int system: base of the numbers
 
-int mod_2(char *num, int system)
+###int mod_2(char *num, int system)
 Description: Function that returns modulo 2 of the number
 Arguments: 
 - char *num: string representing number
 - int system: base of the numbers
 
-char * div_2(char *first, int system)
+###char * div_2(char *first, int system)
 Description: Function that divides number by 2 (for binary system bitwise shift right)
 Arguments: 
 - char *first: string representing number
 - int system: base of the numbers
 
-char * mul(char *first_number, char* second_number, int system)
+###char * mul(char *first_number, char* second_number, int system)
 Description: Function that multiplies two numbers
 Arguments: 
 - char *first_number: string representing number
 - char *second_number: string representing number
 - int system: base of the numbers
   
-char * division(char *first_number, char *second_number, int system)
+###char * division(char *first_number, char *second_number, int system)
 Description: Function that divides two numbers
 Arguments: 
 - char *first_number: string representing number
 - char *second_number: string representing number
 - int system: base of the numbers
 
-char * power(char *first_number, char *second_number, int system)
+###char * power(char *first_number, char *second_number, int system)
 Description: Function that returns first_number to the power of second_number
 Arguments: 
 - char *first_number: string representing number
 - char *second_number: string representing number
 - int system: base of the numbers
 
-char * sub(char *first_number, char *second_number, int system)
+###char * sub(char *first_number, char *second_number, int system)
 Description: Function that subtracts two numbers used in modulo function
 Arguments: 
 - char *first_number: string representing number
 - char *second_number: string representing number
 - int system: base of the numbers
 
-char * modulo(char *first_number, char *second_number, int system)
+###char * modulo(char *first_number, char *second_number, int system)
 Description: Function that returns modulo of two numbers
 Arguments: 
 - char *first_number: string representing number
 - char *second_number: string representing number
 - int system: base of the numbers
 
-char * increment(char *iterator)
+###char * increment(char *iterator)
 Description: Function that increments number by one used in changing systems functions
 Arguments: 
 - char *iterator: string representing number
 
-char * sys_to_string(int system)
+###char * sys_to_string(int system)
 Description: Function that returns system as string
 Arguments: 
 - int system: system of the number
 
-char * to_decimal(char *first_number, int system)
+###char * to_decimal(char *first_number, int system)
 Description: Function that changes number from any system to decimal
 Arguments: 
 - char *first_number: string representing number
 - int system: original base of the number
 
-char * from_decimal(char *first_number, int system)
+###char * from_decimal(char *first_number, int system)
 Description: Function that changes number from decimal to any system
 Arguments: 
 - char *first_number: string representing number
 - int system: target base of the number
 
-char * arithmetics(char *first_number, char *second_number, char operation, int system[])
+###char * arithmetics(char *first_number, char *second_number, char operation, int system[])
 Description: Function that returns result of arithmetic operation
 Arguments: 
 - char *first_number: string representing number
@@ -203,19 +203,19 @@ Arguments:
 - char operation: sign of the operation
 - int system[]: array with systems
 
-void print_error(int error_code, FILE *output)
+###void print_error(int error_code, FILE *output)
 Description: Function that prints error code
 Arguments: 
 - int error_code: error code
 - FILE *output: pointer to the file to print the error to
 
-void calculate(char INPUT[40], char output[40])
+###void calculate(char INPUT[40], char output[40])
 Description: Main function of the program that reads file and writes results to file
 Arguments: 
 - char INPUT[40]: input file name
 - char output[40]: output file name
 
-int main(void)
+###int main(void)
 Description: Main function that starts the program
 Arguments: 
 - char INPUT[40]: input file name
