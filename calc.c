@@ -904,7 +904,7 @@ void print_error(int error_code, FILE *output) {
             fprintf(output, "Error code 3. Incorrect file format\n\n");
             break;
         case 402:
-            fprintf(output, "Error code 402. Where number??.\n");
+            fprintf(output, "Error code 402. Where number??\n");
             break;
         default:
             break;
@@ -928,7 +928,10 @@ void calculate(char INPUT[40], char output[40]) {
     ptr_in = fopen(INPUT, "r");
     ptr_out = fopen(output, "w");
     starts = time(NULL);
-
+    if(ptr_in == NULL) {
+        fprintf(ptr_out, "Error code 8. Error opening file %s\n", INPUT);
+        exit(1);
+    }
     /*Main loop of the function*/
     while(fgets(line, MAX_NUMBER, ptr_in)) {
         if(line[0] == '\n') {
@@ -1064,7 +1067,16 @@ void calculate(char INPUT[40], char output[40]) {
     printf("czas operacji: %f sekund\n", delta);
 }
 
-int main(void) {
-    calculate("in.txt", "out.txt");
+int main(int argc, char *argv[]) {
+    char *input_file, *output_file;
+    if (argc != 3) {
+        printf("Correct run command ./calc <input_file> <output_file>\n");
+        return 1;
+    }
+
+    input_file = argv[1];
+    output_file = argv[2];
+
+    calculate(input_file, output_file);
     return 0;
 }
