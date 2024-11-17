@@ -1,4 +1,4 @@
-/**
+**
  * @file calc.c
  * @brief A simple calculator program.
  *
@@ -78,4 +78,4 @@
  * - void calculate(char INPUT[40], char output[40]): This function reads from a file and writes results to a file.
  *
  * @date
- */
+   
