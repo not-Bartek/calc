@@ -215,7 +215,7 @@ Arguments:
 - char INPUT[40]: input file name
 - char output[40]: output file name
 
-### int main(void)
+### int main(int argc, char *argv[])
 Description: Main function that starts the program
 Arguments: 
 - char INPUT[40]: input file name
