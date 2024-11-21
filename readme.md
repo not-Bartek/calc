@@ -100,7 +100,7 @@ Algorithm is based on binary search algorithm: searching the number which multip
 ### Modulo
 Simple algorithm of int division the first number by second, then multiplication the result by second number and finally substracion first result from second result 
 ### Base change
-Algorithm divided into two parts - first: base change from any to decimal, by multiplying the i-th digit by system to the power i-1, and second: base chagne from decimal to any, by doing modulo system and reading it from right to left.
+Algorithm divided into two parts - first: base change from any to decimal, by multiplying the i-th digit by system to the power i, and second: base chagne from decimal to any, by doing modulo system and reading it from right to left.
 
 ## Functions 
 ### int len(char string[])
