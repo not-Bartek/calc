@@ -65,6 +65,43 @@ FF
 
 1E
 ```
+## Example output file
+```
++ 10
+
+123
+
+15
+
+138
+
+
+
+* 16
+
+FF
+
+1E
+
+1DE2
+
+```
+## Implementation
+### General
+Numbers are written from right to left (units digit is the first) as char arrays ended with null sign '\0' 
+### Addition
+Algorithm is based on basic written addition algorithm, numbers are aligned that unit digits are under each other and then digits added from end to the start from the nubmer with carry if sum is greater than system
+### Multiplication
+Algorithm is based on basic written multiplication algorithm - every digit is multiplicated with each other and added to the correct digit of the result, if the digit is greater than system carry is used
+### Power
+Algorithm is based on fast powering algorithm, dividing the exponent by two and saving modulos of two till it's equal zero, then based on the modulos array multiplicating result with itself 
+### Division
+Algorithm is based on binary search algorithm: searching the number which multiplicated by second number is the first number
+### Modulo
+Simple algorithm of int division the first number by second, then multiplication the result by second number and finally substracion first result from second result 
+### Base change
+Algorithm divided into two parts - first: base change from any to decimal, by multiplying the i-th digit by system to the power i-1, and second: base chagne from decimal to any, by doing modulo system and reading it from right to left.
+
 ## Functions 
 ### int len(char string[])
 Description: Function that returns length of string (or number of digits)
