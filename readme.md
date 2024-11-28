@@ -11,7 +11,7 @@ input file and saves results to the output file
    - Second argument: output file directory
 - If there is no output file, program will create the file
 - If there is no input file, program will print error 8
-
+- Works the best if you copy the text to the text file created in directory of project 
 ## Error Handling ##
 Program handles some common errors returning error codes and messages:
 - Error code 1. Incorrect operation and system line.
